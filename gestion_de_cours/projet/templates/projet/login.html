@@ -1,67 +1,82 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Connexion</h3>
+{% extends 'projet/base.html' %}
+
+{% block title %}Connexion - Gestion de Cours{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="text-center mb-5">
+            <div class="icon-wrapper icon-primary mx-auto mb-3" style="width: 80px; height: 80px;">
+                <i class="fas fa-graduation-cap fa-3x"></i>
+            </div>
+            <h2 class="fw-bold">Connexion</h2>
+            <p class="text-muted">Connectez-vous à votre compte</p>
+        </div>
+        
+        <div class="card">
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="username" class="form-label fw-semibold">
+                            <i class="fas fa-user me-2 text-primary"></i>Nom d'utilisateur
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg" 
+                            id="username" 
+                            name="username" 
+                            required
+                            autofocus
+                            placeholder="Entrez votre nom d'utilisateur"
+                        >
                     </div>
-                    <div class="card-body">
-                        <!-- Affichage des messages Django -->
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        
-                        <!-- Formulaire de connexion -->
-                        <form method="post" novalidate>
-                            {% csrf_token %}
-                            
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Nom d'utilisateur</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    id="username" 
-                                    name="username" 
-                                    required
-                                    autofocus
-                                >
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Mot de passe</label>
-                                <input 
-                                    type="password" 
-                                    class="form-control" 
-                                    id="password" 
-                                    name="password" 
-                                    required
-                                >
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Se connecter</button>
-                            </div>
-                        </form>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            <i class="fas fa-lock me-2 text-primary"></i>Mot de passe
+                        </label>
+                        <input 
+                            type="password" 
+                            class="form-control form-control-lg" 
+                            id="password" 
+                            name="password" 
+                            required
+                            placeholder="Entrez votre mot de passe"
+                        >
                     </div>
-                </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
+        
+        <div class="text-center mt-4">
+            <p class="text-muted">
+                <i class="fas fa-info-circle me-2"></i>
+                Pas encore de compte ? Contactez l'administrateur
+            </p>
+        </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    .main-container {
+        margin-top: 0;
+    }
+</style>
+{% endblock %}

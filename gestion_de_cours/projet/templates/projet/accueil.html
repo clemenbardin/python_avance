@@ -1,33 +1,110 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Accueil</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>Bienvenue {{ user.username }} !</h1>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        
-        {% if user.student_profile %}
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h5>Votre profil étudiant</h5>
-                    <p><strong>Numéro d'étudiant :</strong> {{ user.student_profile.numero_etudiant }}</p>
-                    <p><strong>Niveau d'études :</strong> {{ user.student_profile.get_niveau_etudes_display }}</p>
-                    <p><strong>Date de naissance :</strong> {{ user.student_profile.date_naissance }}</p>
+{% extends 'projet/base.html' %}
+
+{% block title %}Accueil - Gestion de Cours{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="profile-card">
+            <div class="d-flex align-items-center">
+                <div class="icon-wrapper icon-primary me-3">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                </div>
+                <div>
+                    <h1 class="mb-1">Bienvenue, {{ user.username }} !</h1>
+                    <p class="mb-0 opacity-75">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        {{ user.date_joined|date:"d F Y" }}
+                    </p>
                 </div>
             </div>
-        {% endif %}
-        
-        <a href="{% url 'liste_cours' %}" class="btn btn-primary mt-3">Voir les cours</a>
-        <a href="{% url 'logout' %}" class="btn btn-secondary mt-3">Se déconnecter</a>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+{% if user.student_profile %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-id-card me-2"></i>Votre profil étudiant
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card">
+                            <div class="icon-wrapper icon-primary mx-auto mb-2">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <h6 class="text-muted mb-1">Numéro d'étudiant</h6>
+                            <h4 class="stat-number">{{ user.student_profile.numero_etudiant }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card">
+                            <div class="icon-wrapper icon-info mx-auto mb-2">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <h6 class="text-muted mb-1">Niveau d'études</h6>
+                            <h4 class="stat-number" style="font-size: 1.5rem;">{{ user.student_profile.get_niveau_etudes_display }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card">
+                            <div class="icon-wrapper icon-success mx-auto mb-2">
+                                <i class="fas fa-birthday-cake"></i>
+                            </div>
+                            <h6 class="text-muted mb-1">Date de naissance</h6>
+                            <h4 class="stat-number" style="font-size: 1.5rem;">{{ user.student_profile.date_naissance|date:"d/m/Y" }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card course-card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Parcourir les cours</h5>
+                <p class="card-text text-muted">Découvrez tous les cours disponibles et inscrivez-vous</p>
+                <a href="{% url 'liste_cours' %}" class="btn btn-primary w-100">
+                    <i class="fas fa-arrow-right me-2"></i>Voir les cours
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card course-card">
+            <div class="card-body text-center">
+                <h5 class="card-title">S'inscrire à un cours</h5>
+                <p class="card-text text-muted">Inscrivez-vous rapidement à un nouveau cours</p>
+                <a href="{% url 'inscription_cours' %}" class="btn btn-success w-100">
+                    <i class="fas fa-arrow-right me-2"></i>S'inscrire
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    {% if perms.projet.can_publish_course %}
+    <div class="col-md-4 mb-3">
+        <div class="card course-card">
+            <div class="card-body text-center">
+                <div class="icon-wrapper icon-info mx-auto mb-3">
+                    <i class="fas fa-chart-bar fa-2x"></i>
+                </div>
+                <h5 class="card-title">Statistiques</h5>
+                <p class="card-text text-muted">Consultez les statistiques des cours</p>
+                <a href="#" class="btn btn-info w-100">
+                    <i class="fas fa-arrow-right me-2"></i>Voir les stats
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
