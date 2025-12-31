@@ -1,0 +1,79 @@
+{% comment %}
+Partie C : Template avec Permissions (5 points)
+Extrait de template qui affiche conditionnellement des éléments basés sur les permissions
+{% endcomment %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container-fluid">
+        <span class="navbar-brand">Utilisateur connecté : <strong>{{ user.username }}</strong></span>
+        
+        <div class="navbar-nav ms-auto">
+            {% if perms.projet.can_publish_course %}
+                <a class="btn btn-success me-2" href="#" role="button">
+                    Publier
+                </a>
+            {% endif %}
+            
+            {% if perms.projet.can_view_statistics %}
+                <a class="btn btn-info me-2" href="#" role="button">
+                    Statistiques
+                </a>
+            {% endif %}
+            
+            <a class="btn btn-outline-danger" href="{% url 'logout' %}" role="button">
+                Déconnexion
+            </a>
+        </div>
+    </div>
+</nav>
+
+{% comment %}
+VERSION ALTERNATIVE : Pour afficher dans une carte de cours
+{% endcomment %}
+
+{% comment %}
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Connecté en tant que : <strong>{{ user.username }}</strong></span>
+        <div>
+            {% if perms.projet.can_publish_course %}
+                <button class="btn btn-sm btn-success me-2">Publier</button>
+            {% endif %}
+            
+            {% if perms.projet.can_view_statistics %}
+                <a href="#" class="btn btn-sm btn-info me-2">Statistiques</a>
+            {% endif %}
+            
+            <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger">Déconnexion</a>
+        </div>
+    </div>
+</div>
+{% endcomment %}
+
+{% comment %}
+EXPLICATION DES TAGS UTILISÉS :
+
+1. {{ user.username }} 
+   - Affiche le nom d'utilisateur connecté
+   - Disponible automatiquement dans tous les templates grâce au context processor 'django.contrib.auth.context_processors.auth'
+
+2. {% if perms.projet.can_publish_course %}
+   - Vérifie si l'utilisateur connecté a la permission 'can_publish_course' sur le modèle 'projet.Course'
+   - Syntaxe : perms.<app_name>.<permission_codename>
+   - Retourne True si l'utilisateur a la permission, False sinon
+
+3. {% if perms.projet.can_view_statistics %}
+   - Vérifie si l'utilisateur connecté a la permission 'can_view_statistics' sur le modèle 'projet.Course'
+   - Même principe que ci-dessus
+
+4. {% url 'logout' %}
+   - Génère l'URL de la vue nommée 'logout'
+   - Évite de hardcoder les URLs dans les templates
+   - Si l'URL change, seul le fichier urls.py doit être modifié
+
+NOTES IMPORTANTES :
+- Les permissions sont vérifiées côté template, mais la sécurité réelle doit être gérée dans les vues avec @permission_required
+- Les tags {% if perms %} fonctionnent uniquement si l'utilisateur est authentifié
+- Pour vérifier si un utilisateur est authentifié : {% if user.is_authenticated %}
+{% endcomment %}
+

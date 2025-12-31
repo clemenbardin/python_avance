@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from projet.views import inscription_cours
+from projet.views import inscription_cours, login_view, accueil, course_publish, liste_cours, logout_view
 
 urlpatterns = [
+    path('', accueil, name='accueil'),
     path('admin/', admin.site.urls),
     path('inscription/', inscription_cours, name='inscription_cours'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    path('cours/', liste_cours, name='liste_cours'),
+    path('course/<int:course_id>/publish/', course_publish, name='course_publish'),
 ]

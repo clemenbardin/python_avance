@@ -42,6 +42,10 @@ class Course(models.Model):
         verbose_name = "Cours"
         verbose_name_plural = "Cours"
         ordering = ['titre']
+        permissions = [
+            ('can_publish_course', 'Peut publier un cours'),
+            ('can_view_statistics', 'Peut voir les statistiques'),
+        ]
 
     def __str__(self):
         return f"{self.titre} - {self.instructeur.nom_complet}"
@@ -105,3 +109,49 @@ class Enrollment(models.Model):
         if self.note_finale is not None:
             return self.note_finale >= 10
         return False
+
+class StudentProfile(models.Model): 
+    
+    NIVEAU_CHOICES = [
+        ('Licence', 'Licence'),
+        ('Master', 'Master'),
+        ('Doctorat', 'Doctorat'),
+    ]
+    
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='student_profile',
+        verbose_name="Utilisateur"
+    )
+    
+    numero_etudiant = models.CharField(
+        max_length=20,
+        unique=True,
+        verbose_name="Numéro d'étudiant",
+        help_text="Numéro unique d'identification de l'étudiant"
+    )
+    
+    date_naissance = models.DateField(
+        verbose_name="Date de naissance"
+    )
+    
+    niveau_etudes = models.CharField(
+        max_length=10,
+        choices=NIVEAU_CHOICES,
+        verbose_name="Niveau d'études"
+    )
+    
+    class Meta:
+        verbose_name = "Profil étudiant"
+        verbose_name_plural = "Profils étudiants"
+        ordering = ['numero_etudiant']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.numero_etudiant} ({self.niveau_etudes})"
+    
+    def age(self):
+        today = timezone.now().date()
+        return today.year - self.date_naissance.year - (
+            (today.month, today.day) < (self.date_naissance.month, self.date_naissance.day)
+        )
